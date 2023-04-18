@@ -1,0 +1,132 @@
+Order of People Heights
+
+Problem Statement
+Detailed explanation ( Input/output format, Notes, Images )
+Sample Input 1 :
+2
+5
+5 4 3 2 1
+0 0 0 0 0
+6
+5 3 2 6 1 4
+0 1 2 0 3 2
+Sample Output 1 :
+1 2 3 4 5
+5 3 2 1 6 4
+Explanation Of Sample Input 1 :
+Test case 1:
+There is no person in front of any person who is taller than him, Thus all of them must be present in the queue in increasing order of their height.
+
+Test case 2:
+See the problem statement for an explanation.
+Sample Input 2 :
+2
+2
+2 3
+1 0
+5
+1 2 3 4 5
+4 3 2 1 0
+Sample Output 2 :
+3 2
+5 4 3 2 1
+
+
+
+Sorting
+Sort people by heights. Then iterate from shortest to tallest. In each step, you need an efficient way to put the next person in the correct position. Notice that the people we’ve already placed are not taller than the current person. And the people we place after are taller than the current. So we have to find the first empty place such that the number of empty positions in front of it is equal to the Infront value of this person.
+
+ 
+
+For example, let there are 3 people, with Height  = [5, 3, 1] and Infront = [0, 0, 1], Thus after sorting in increasing order of height , we get, Height = [1, 3, 5] and Infront = [1, 0, 0].
+
+ 
+
+Let there are three positions in a queue i.e _  _ _   
+
+ 
+
+So first we place the person with height 1, after 1 empty position,  ie _ 1 _.
+
+ 
+
+Then we place, the person with height 3, such that there are exactly 0 empty positions before it, i.e  3 1 _,
+
+ 
+
+Then we place, the person with height 5, such that there are exactly 0 empty positions before it, i.e 3 1 5
+
+ 
+
+Thus [3, 1, 5] will be our required answer.
+
+ 
+
+Algorithm
+
+Sort the array ‘Height’ in increasing order and arrange the elements of array ‘Infront’ such that ‘Height[i]’ and ‘Infront[i]’, represent height and infront value of the same person after sorting. This can be done by creating a matrix people[][] of size n*2 such that people[i][0] = Height[i], and people[i][1] = Infront[i], sort this matrix people[][], according to increasing order of its first column i.e height, and then assign Height[i] := people[i][0] and Infront[i] := people[i][1].
+Create an array ‘result’ of size ‘N’ and fill it with 0.
+Run a loop where ’i’ ranges from 0 to ‘N-1’ and in each step do the following -;
+Initialize an integer variable ‘countEmpty’ := 0
+Run a loop where ‘j’ ranges from 0 to ‘N-1’  and in each iteration, if result[i]:= 0 and countEmpty < Infront[i], then increment countEmpty by one,  otherwise if result[i]:= 0 and countEmpty == Infront[i], assign result[j] := Height[i] and break this inner loop.
+Return ‘result’.
+Time Complexity
+O(N^2), where  ‘N’ is the number of people.
+
+ 
+
+Time taken by sorting will be O(NlogN), and here for each position, it takes O(N) time in the worst case to decide which person should be there. As there are ‘N’ positions in the queue, the overall time complexity will be O(N^2 + NlogN) = O(N^2).
+
+Space Complexity
+O(N), where  ‘N’ is the number of people.
+
+ 
+
+The extra space is used by the array ‘result’ and matrix ‘people’, both of them have a size of the order of ‘N’. Thus overall space complexity will be O(N).
+
+Code
+Python (3.5)
+'''
+    Time Complexity : O(N^2)
+    Space Complexity : O(N)
+
+    Where ‘N’ is the number of people.
+'''
+
+
+def findOrder(height, infront):
+    # Number of people in a queue.
+    n = len(height)
+
+    '''
+        Sort the array ‘Height’ in increasing order and arrange the elements
+        of array ‘Infront’ such that ‘Height[i]’ and ‘Infront[i]’ represents 
+        height and infront value of the same person after sorting.
+
+        This can be done with help of matrix 'people'
+    '''
+
+    people = [[height[i], infront[i]] for i in range(n)]
+
+    people.sort()
+
+    for i in range(n):
+        height[i] = people[i][0]
+        infront[i] = people[i][1]
+
+    # It will have actual order of people in a queue.
+    result = [0 for i in range(n)]
+
+    # Find actual position of each people in a queue.
+    for i in range(n):
+        countEmpty = 0
+
+        # Find first index such that there are infront[i] empty slots before it.
+        for j in range(n):
+            if (result[j] == 0 and countEmpty < infront[i]):
+                countEmpty += 1
+            elif (result[j] == 0 and countEmpty == infront[i]):
+                result[j] = height[i]
+                break
+
+    return result
