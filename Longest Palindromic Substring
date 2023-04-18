@@ -1,0 +1,43 @@
+Longest Palindromic Substring
+
+Problem Statement
+Detailed explanation ( Input/output format, Notes, Images )
+Sample Input 1:
+1
+abccbc
+Sample Output 1:
+bccb
+Explanation For Input 1:
+For string "abccbc" there are multiple palindromic substrings like "a", "b", "c", "cc", "bccb", "cbc".
+But "bccb" is of the longest length. Thus, answer is "bccb".
+Sample Input 2:
+1
+aeiou
+Sample Output 2:
+a
+Explanation For Input 2:
+For string "aeiou" there are multiple palindromic substrings like "a", "e", "I", "o", "u", and all of the same length.
+But palindromic substring "a"  has the minimum starting index. Thus, the answer is "a".
+
+def longestPalinSubstring(str):
+    res = ""
+    reslength = 0
+    n = len(str)
+    for i in range(len(str)):
+    //odd length
+        l,r = i,i
+        while l >=0 and r < n and str[l] == str[r]:
+            if (r-l+1) > reslength:
+                res = str[l:r+1]
+                reslength = r-l+1
+            l-=1
+            r+=1
+       //even length
+        l,r=i,i+1
+        while l>=0 and r<n and str[l] == str[r]:
+            if (r-l+1) > reslength:
+                res = str[l:r+1]
+                reslength = r-l+1
+            l-=1
+            r+=1
+    return res
