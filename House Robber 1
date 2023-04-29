@@ -1,0 +1,102 @@
+House Robber
+
+Problem Statement
+Detailed explanation ( Input/output format, Notes, Images )
+Sample Input 1:
+4
+10 2 3 11
+Sample Output 1:
+21
+Explanation Of Sample Input 1:
+Since the thief cant loot two consecutive houses, the ways in which he may loot are:
+
+1. [10, 3]: a total loot of 13
+2. [10, 11]: a total loot of 21
+3. [2, 11]: a total loot of 13
+4. [10]: a total loot of 10
+5. [2]: a total loot of 2
+6. [3]: a total loot of 3
+7. [11]: a total loot of 11
+
+We can't neglect the option to loot just either of the houses if it yields the maximum loot.
+
+From all the possible seven ways, the second option yields the maximum loot amount and hence the answer.
+Sample Input 2:
+6
+5 5 10 100 10 5
+Sample Output 2 :
+110
+
+
+#using DP
+from sys import stdin
+
+def helper(houses, ind, dp):
+    if dp[ind] != -1:
+        return dp[ind]
+    if ind == 0:
+        return houses[0]
+    if ind < 0:
+        return 0
+    pick = houses[ind] + helper(houses, ind-2, dp)
+    notpick = helper(houses, ind-1, dp)
+    dp[ind] = max(pick, notpick)
+    return dp[ind]
+
+def maxMoneyLooted(houses, n) :
+    dp = [-1 for i in range(n)]
+    return helper(houses, n-1, dp)
+
+
+iterative approach best 
+
+
+def maxMoneyLooted(houses, n) :
+    prev = houses[0]
+    prev2 = 0
+    for i in range(1, n):
+        pick = houses[i]
+        if i > 1:
+            pick += prev2
+        notpick = 0 + prev
+        cur = max(pick, notpick)
+        prev2 = prev
+        prev = cur
+    return prev
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#taking input using fast I/O method
+
+def takeInput() :
+    n = int(stdin.readline().rstrip())
+    if n == 0 :
+        return list(), 0
+
+    arr = list(map(int, stdin.readline().rstrip().split(" ")))
+    return arr, n
+
+
+#main
+arr, n = takeInput()
+print(maxMoneyLooted(arr, n))
